@@ -65,23 +65,31 @@ pub mod Startikle {
     }
 
     #[event]
-    #[derive(Drop, starknet::Event)]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     enum Event {
         Register: Register,
         Publish: Publish,
         Like: Like
     }
-    #[derive(Drop, starknet::Event)]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     struct Register {
-        // TBD
+        pub author_address: ContractAddress,
+        pub author_name: felt252,
+        pub registry_time: u64
     }
-    #[derive(Drop, starknet::Event)]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     struct Publish {
-        // TBD
+        pub index: u256, 
+        pub author_address: ContractAddress,
+        pub title: felt252,
+        pub context: ByteArray,
+        pub post_time: u64
     }
-    #[derive(Drop, starknet::Event)]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     struct Like {
-        // TBD
+        pub author_address: ContractAddress,
+        pub index: u256,
+        pub liker_address: ContractAddress,
     }
     
     #[constructor]
@@ -99,24 +107,36 @@ pub mod Startikle {
         ) {
             // register the user info
             let sender = get_caller_address();
+            let time = get_block_number();
             let mut current_publication = Publication {
                 registered: true,
                 author_address: sender,
                 author_name: name, 
                 total_published: 0,
-                registry_time: get_block_number()
+                registry_time: time
             };
             self.publications.write(sender, current_publication);
 
             // increment the total user number
             let user = self.total_user.read() + 1;
             self.total_user.write(user);
+
+            // emit the event
+            self.emit(
+                Event::Register(Register { 
+                            author_address: sender,
+                            author_name: name,
+                            registry_time: time
+                        }
+                    )
+                );
         }
 
         fn publish(
             ref self: TContractState, title: felt252, context: ByteArray
         ) {
             let sender = get_caller_address();
+            let time = get_block_number();
             // increment the user post number
             let publication = self.publications.read(sender);
             let user_post = publication.total_published + 1;
@@ -129,7 +149,7 @@ pub mod Startikle {
                 author_address: sender, 
                 title: title,
                 context: context,
-                post_time: get_block_number(),
+                post_time: time,
                 likes_num: 0
             };
             self.post.write((sender, user_post), current_post);
@@ -137,20 +157,44 @@ pub mod Startikle {
             // increment the total post number
             let total_post = self.total_published.read() + 1;
             self.total_published.write(total_post);
+
+            // emit the event
+            self.emit(
+                Event::Publish(Publish { 
+                            index: user_post, 
+                            author_address: sender,
+                            title: title,
+                            context: context,
+                            post_time: time
+                        }
+                    )
+                );
         }
 
         fn like(
             ref self: TContractState, author: ContractAddress, index: u256
         ) {
+            let liker = get_caller_address();
             let post = self.post.read((author, index));
             let likes = post.likes_num + 1;
             post.likes_num = likes
             self.post.write((author, index), post);
+
+            // emit the event
+            self.emit(
+                Event::Like(Like { 
+                            author_address: author,
+                            index: index,
+                            liker_address: liker,
+                        }
+                    )
+                );
         }
         
         fn get_system_total_published_num(self: @TContractState) -> u256 {
             return self.total_published.read();
         }
+
         fn get_system_total_user_num(self: @TContractState) -> u256 {
             return self.total_user.read();
         }
@@ -167,6 +211,7 @@ pub mod Startikle {
         fn get_post(self: @TContractState, address: ContractAddress, index: u256) -> Startikle::Post {
             return self.post.read((address, index));
         }
+        
         fn get_likes(self: @TContractState, author: ContractAddress, index: u256) -> u256 {
             let post = self.post.read((author, index));
             return post.likes_num;
