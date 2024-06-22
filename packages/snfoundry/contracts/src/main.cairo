@@ -118,10 +118,10 @@ pub mod Startikle {
         ) {
             let sender = get_caller_address();
             // increment the user post number
-            let pubication = self.publications.read(sender);
-            let user_post = pubication.total_published + 1;
-            pubication.total_published = user_post
-            self.publications.write(sender, pubication);
+            let publication = self.publications.read(sender);
+            let user_post = publication.total_published + 1;
+            publication.total_published = user_post
+            self.publications.write(sender, publication);
 
             // publish the post
             let mut current_post = Post {
@@ -153,6 +153,23 @@ pub mod Startikle {
         }
         fn get_system_total_user_num(self: @TContractState) -> u256 {
             return self.total_user.read();
+        }
+
+        fn get_publication(self: @TContractState, address: ContractAddress) -> Startikle::Publication {
+            return self.publications.read(address);
+        }
+
+        fn is_registered(self: @TContractState, address: ContractAddress) -> bool {
+            let publication = self.publications.read(address);
+            return publication.registered;
+        }
+
+        fn get_post(self: @TContractState, address: ContractAddress, index: u256) -> Startikle::Post {
+            return self.post.read((address, index));
+        }
+        fn get_likes(self: @TContractState, author: ContractAddress, index: u256) -> u256 {
+            let post = self.post.read((author, index));
+            return post.likes_num;
         }
     }
     
