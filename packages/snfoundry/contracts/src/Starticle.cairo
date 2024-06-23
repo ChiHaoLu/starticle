@@ -3,24 +3,18 @@ use starknet::ContractAddress;
 #[starknet::interface]
 pub trait IStarticle<TContractState> {
     /// @notice This function is used to register new user
-    fn register(
-        ref self: TContractState, name: felt252
-    );
-    
+    fn register(ref self: TContractState, name: felt252);
+
     /// @notice This function is used to publish new post
-    fn publish(
-        ref self: TContractState, title: felt252, ctx: ByteArray
-    );
-    
+    fn publish(ref self: TContractState, title: felt252, ctx: ByteArray);
+
     /// @notice This function is used to like the post with (author, index)
-    fn like(
-        ref self: TContractState, author: ContractAddress, index: u256
-    );
-    
+    fn like(ref self: TContractState, author: ContractAddress, index: u256);
+
     // system get function
     fn get_system_total_published_num(self: @TContractState) -> u256;
     fn get_system_total_user_num(self: @TContractState) -> u256;
-    
+
     // publication get function
     fn get_publication(self: @TContractState, address: ContractAddress) -> Publication;
     fn is_registered(self: @TContractState, address: ContractAddress) -> bool;
@@ -51,15 +45,17 @@ pub struct Post {
 
 #[starknet::contract]
 pub mod Starticle {
-    use starknet::{ContractAddress, get_caller_address, get_block_timestamp, storage_access::StorageBaseAddress};
-    
-    use super::Publication;
+    use starknet::{
+        ContractAddress, get_caller_address, get_block_timestamp, storage_access::StorageBaseAddress
+    };
     use super::Post;
+
+    use super::Publication;
 
     #[storage]
     struct Storage {
         pub total_user: u256,
-        pub total_published: u256, 
+        pub total_published: u256,
         pub post: LegacyMap::<(ContractAddress, u256), Post>,
         pub context: LegacyMap::<(ContractAddress, u256), ByteArray>,
         pub publications: LegacyMap::<ContractAddress, Publication>,
@@ -80,7 +76,7 @@ pub mod Starticle {
     }
     #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     struct Publish {
-        pub index: u256, 
+        pub index: u256,
         pub author_address: ContractAddress,
         pub title: felt252,
         pub post_time: u64
@@ -91,27 +87,24 @@ pub mod Starticle {
         pub index: u256,
         pub liker_address: ContractAddress,
     }
-    
+
     #[constructor]
     fn constructor(ref self: ContractState) {
         self.total_published.write(0);
-        self.total_user.write(0); 
+        self.total_user.write(0);
     }
 
     // Public functions inside an impl block
     #[abi(embed_v0)]
     impl Starticle of super::IStarticle<ContractState> {
-        
-        fn register(
-            ref self: ContractState, name: felt252
-        ) {
+        fn register(ref self: ContractState, name: felt252) {
             // register the user info
             let sender = get_caller_address();
             let time = get_block_timestamp();
             let mut current_publication = Publication {
                 registered: true,
                 author_address: sender,
-                author_name: name, 
+                author_name: name,
                 total_published: 0,
                 registry_time: time
             };
@@ -122,19 +115,15 @@ pub mod Starticle {
             self.total_user.write(user);
 
             // emit the event
-            self.emit(
-                Event::Register(Register { 
-                            author_address: sender,
-                            author_name: name,
-                            registry_time: time
-                        }
+            self
+                .emit(
+                    Event::Register(
+                        Register { author_address: sender, author_name: name, registry_time: time }
                     )
                 );
         }
 
-        fn publish(
-            ref self: ContractState, title: felt252, ctx: ByteArray
-        ) {
+        fn publish(ref self: ContractState, title: felt252, ctx: ByteArray) {
             let sender = get_caller_address();
             let time = get_block_timestamp();
             // increment the user post number
@@ -143,20 +132,25 @@ pub mod Starticle {
             let new_publication = Publication {
                 registered: true,
                 author_address: publication.author_address,
-                author_name: publication.author_name, 
+                author_name: publication.author_name,
                 total_published: publication.total_published + 1,
                 registry_time: publication.registry_time
             };
             self.publications.write(sender, new_publication);
 
             // publish the post
-            self.post.write((sender, current_index), Post {
-                index: current_index, 
-                author_address: sender, 
-                title: title,
-                post_time: time,
-                likes_num: 0
-            });
+            self
+                .post
+                .write(
+                    (sender, current_index),
+                    Post {
+                        index: current_index,
+                        author_address: sender,
+                        title: title,
+                        post_time: time,
+                        likes_num: 0
+                    }
+                );
             self.context.write((sender, current_index), ctx);
 
             // increment the total post number
@@ -164,9 +158,11 @@ pub mod Starticle {
             self.total_published.write(total_post);
 
             // emit the event
-            self.emit(
-                Event::Publish(Publish { 
-                            index: current_index, 
+            self
+                .emit(
+                    Event::Publish(
+                        Publish {
+                            index: current_index,
                             author_address: sender,
                             title: title,
                             post_time: time
@@ -175,14 +171,12 @@ pub mod Starticle {
                 );
         }
 
-        fn like(
-            ref self: ContractState, author: ContractAddress, index: u256
-        ) {
+        fn like(ref self: ContractState, author: ContractAddress, index: u256) {
             let liker = get_caller_address();
             let post = self.post.read((author, index));
             let new_post = Post {
-                index: post.index, 
-                author_address: post.author_address, 
+                index: post.index,
+                author_address: post.author_address,
                 title: post.title,
                 post_time: post.post_time,
                 likes_num: post.likes_num + 1
@@ -190,16 +184,14 @@ pub mod Starticle {
             self.post.write((author, index), new_post);
 
             // emit the event
-            self.emit(
-                Event::Like(Like { 
-                            author_address: author,
-                            index: index,
-                            liker_address: liker,
-                        }
+            self
+                .emit(
+                    Event::Like(
+                        Like { author_address: author, index: index, liker_address: liker, }
                     )
                 );
         }
-        
+
         fn get_system_total_published_num(self: @ContractState) -> u256 {
             return self.total_published.read();
         }
@@ -224,27 +216,26 @@ pub mod Starticle {
         fn get_context(self: @ContractState, address: ContractAddress, index: u256) -> ByteArray {
             return self.context.read((address, index));
         }
-        
+
         fn get_likes(self: @ContractState, author: ContractAddress, index: u256) -> u256 {
             let post = self.post.read((author, index));
             return post.likes_num;
         }
     }
+// TODO: error handling
 
-    // TODO: error handling
-    
-    // mod Errors {
-    //     pub const USER_NOT_REGISTERED: felt252 = 'Publish: User has not registried';
-    //     pub const PUBLISH_ZERO_ctx: felt252 = 'Publish: There is not any ctx in post';
-    // }
-    
-    /// @dev Asserts implementation for the Starticle
-    // #[generate_trait]
-    // impl AssertsImpl of AssertsTrait {
-    //     /// @dev Internal function that checks if an user is allowed to publish
-    //     fn _assert_allowed_publish(ref self: ContractState, address: ContractAddress) {
-    //         let is_registered = self.is_registered(address);
-    //         assert(!is_registered, Errors::USER_NOT_REGISTERED);
-    //     }
-    // }
+// mod Errors {
+//     pub const USER_NOT_REGISTERED: felt252 = 'Publish: User has not registried';
+//     pub const PUBLISH_ZERO_ctx: felt252 = 'Publish: There is not any ctx in post';
+// }
+
+/// @dev Asserts implementation for the Starticle
+// #[generate_trait]
+// impl AssertsImpl of AssertsTrait {
+//     /// @dev Internal function that checks if an user is allowed to publish
+//     fn _assert_allowed_publish(ref self: ContractState, address: ContractAddress) {
+//         let is_registered = self.is_registered(address);
+//         assert(!is_registered, Errors::USER_NOT_REGISTERED);
+//     }
+// }
 }

@@ -4,7 +4,7 @@ import scaffoldConfig from "~~/scaffold.config";
 
 const useConditionalStarkProfile = (address: string | undefined) => {
   // Conditional hooks are not recommended, but in this case, it's the best approach to avoid issues on devnet.
-  const profile = useStarkProfile({ address })
+  const profile = useStarkProfile({ address });
   return profile;
 };
 

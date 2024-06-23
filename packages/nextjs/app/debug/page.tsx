@@ -4,7 +4,7 @@ import { getMetadata } from "~~/utils/scaffold-stark/getMetadata";
 
 export const metadata = getMetadata({
   title: "Starticle",
-  description: "Start your journey here!"
+  description: "Start your journey here!",
 });
 
 const Debug: NextPage = () => {

@@ -1,7 +1,10 @@
 use contracts::Starticle::{IStarticleDispatcher, IStarticleDispatcherTrait};
 use openzeppelin::tests::utils::constants::OWNER;
 use openzeppelin::utils::serde::SerializedAppend;
-use snforge_std::{declare, ContractClassTrait, start_cheat_caller_address, stop_cheat_caller_address, spy_events, SpyOn, EventSpy};
+use snforge_std::{
+    declare, ContractClassTrait, start_cheat_caller_address, stop_cheat_caller_address, spy_events,
+    SpyOn, EventSpy
+};
 use starknet::{
     ContractAddress, contract_address_const, SyscallResultTrait, syscalls::deploy_syscall
 };
@@ -45,8 +48,12 @@ fn test_register() {
 
     let user_info = dispatcher.get_publication(caller);
     assert_eq!(user_info.registered, true, "Should be the expected registered");
-    assert_eq!(user_info.author_address, caller, "Should be the expected registering author address");
-    assert_eq!(user_info.author_name, new_user_name, "Should be the expected registering author name");
+    assert_eq!(
+        user_info.author_address, caller, "Should be the expected registering author address"
+    );
+    assert_eq!(
+        user_info.author_name, new_user_name, "Should be the expected registering author name"
+    );
     assert_eq!(user_info.total_published, 0, "Should be the expected total_published");
 }
 
@@ -88,7 +95,7 @@ fn test_like() {
     start_cheat_caller_address(contract_address, caller);
     dispatcher.publish(new_title, new_ctx.clone());
     stop_cheat_caller_address(contract_address);
-    
+
     let liker = contract_address_const::<'liker'>();
     start_cheat_caller_address(contract_address, liker);
     dispatcher.like(caller, 0);
@@ -96,7 +103,5 @@ fn test_like() {
 
     let post_info = dispatcher.get_post(caller, 0);
     assert_eq!(post_info.likes_num, 1, "Should be the expected likes_num");
-
 }
-
 
