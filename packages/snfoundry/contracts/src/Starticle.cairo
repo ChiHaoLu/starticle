@@ -33,20 +33,20 @@ pub trait IStarticle<TContractState> {
 
 #[derive(Drop, Serde, Copy, starknet::Store)]
 pub struct Publication {
-    registered: bool,
-    author_address: ContractAddress, // user's account address
-    author_name: felt252, // short string
-    total_published: u256,
-    registry_time: u64 // timestamp
+    pub registered: bool,
+    pub author_address: ContractAddress, // user's account address
+    pub author_name: felt252, // short string
+    pub total_published: u256,
+    pub registry_time: u64 // timestamp
 }
 
 #[derive(Drop, Serde, Copy, starknet::Store)]
 pub struct Post {
-    index: u256, // the number of this post
-    author_address: ContractAddress, // user's account address
-    title: felt252, // short string
-    post_time: u64, // timestamp
-    likes_num: u256
+    pub index: u256, // the number of this post
+    pub author_address: ContractAddress, // user's account address
+    pub title: felt252, // short string
+    pub post_time: u64, // timestamp
+    pub likes_num: u256
 }
 
 #[starknet::contract]

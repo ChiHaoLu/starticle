@@ -1,8 +1,10 @@
 use contracts::Starticle::{IStarticleDispatcher, IStarticleDispatcherTrait};
 use openzeppelin::tests::utils::constants::OWNER;
 use openzeppelin::utils::serde::SerializedAppend;
-use snforge_std::{declare, ContractClassTrait};
-use starknet::ContractAddress;
+use snforge_std::{declare, ContractClassTrait, start_cheat_caller_address, stop_cheat_caller_address};
+use starknet::{
+    ContractAddress, contract_address_const, SyscallResultTrait, syscalls::deploy_syscall
+};
 
 fn deploy_contract() -> ContractAddress {
     let contract = declare("Starticle").unwrap();
@@ -16,9 +18,7 @@ fn deploy_contract() -> ContractAddress {
 
 #[test]
 fn test_deployment_values() {
-
     let contract_address = deploy_contract();
-
     let dispatcher = IStarticleDispatcher { contract_address };
 
     // Test initialization
@@ -29,8 +29,36 @@ fn test_deployment_values() {
     let current_user = dispatcher.get_system_total_user_num();
     let expected_user: u256 = 0;
     assert_eq!(current_user, expected_user, "Should have the right total user");
-
-    // let new_greeting: ByteArray = "Learn Scaffold-Stark 2! :)";
-    // dispatcher.set_gretting(new_greeting.clone(), 0); // we transfer 0 eth
-    // assert_eq!(dispatcher.gretting(), new_greeting, "Should allow setting a new message");
 }
+
+#[test]
+fn test_register() {
+    let contract_address = deploy_contract();
+    let dispatcher = IStarticleDispatcher { contract_address };
+
+    let caller = contract_address_const::<'caller'>();
+    let new_user_name: felt252 = 'hello';
+
+    // Change the caller address calling the contract at the `contract_address` address
+    start_cheat_caller_address(contract_address, caller);
+    dispatcher.register(new_user_name);
+    stop_cheat_caller_address(contract_address);
+
+    let user_info = dispatcher.get_publication(caller);
+    assert_eq!(user_info.registered, true, "Should be the expected registered");
+    assert_eq!(user_info.author_address, caller, "Should be the expected registering author address");
+    assert_eq!(user_info.author_name, new_user_name, "Should be the expected registering author name");
+    assert_eq!(user_info.total_published, 0, "Should be the expected total_published");
+}
+
+// #[test]
+// fn test_publish() {
+
+// }
+
+// #[test]
+// fn test_like() {
+
+// }
+
+
