@@ -1,4 +1,4 @@
-# Quickstart
+## Quickstart
 1. Clone this repo and install dependencies
 
 2. Prepare your environment variables.

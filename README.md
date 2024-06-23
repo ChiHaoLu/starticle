@@ -1,20 +1,20 @@
 # Starticle
 
-Unlock a new dimension of decentralized publication with Startikle, the avant-garde social media platform designed for the future.
+Unlock a new dimension of decentralized publication with Starticle, the avant-garde social media platform designed for the future.
 
 ## Link Tree
 
 - [Project Link](https://ethglobal.com/events/starkhack/project)
-- [Github Link](https://github.com/ChiHaoLu/startikle-dapp)
+- [Github Link](https://github.com/ChiHaoLu/starticle)
 - [Demo Link]()
 
 ## Key Features
 
-Startikle is a cutting-edge decentralized column platform available on the StarkNet Sepolia Testnet. It leverages the power of StarkNet contracts to securely record and manage all data, ensuring the integrity and transparency of your content. Our dApp features a robust login system built with ArgentX, providing a seamless and secure user experience.
+Starticle is a cutting-edge decentralized column platform available on the StarkNet Sepolia Testnet. It leverages the power of StarkNet contracts to securely record and manage all data, ensuring the integrity and transparency of your content. Our dApp features a robust login system built with ArgentX, providing a seamless and secure user experience.
 
 Using the Voyager API, we retrieve on-chain information to power an advanced indexer, enabling users to search for articles effortlessly. Furthermore, our platform integrates sophisticated AI technologies to help users discover content that aligns with their interests and preferences.
 
-Join the Startikle community and share your articles NOW 💭. Embrace the future of decentralized publication with Startikle, where your voice is truly your own.
+Join the Starticle community and share your articles NOW 💭. Embrace the future of decentralized publication with Starticle, where your voice is truly your own.
 
 ## Team & Background
 
