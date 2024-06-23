@@ -39,7 +39,6 @@ fn test_register() {
     let caller = contract_address_const::<'caller'>();
     let new_user_name: felt252 = 'hello';
 
-    // Change the caller address calling the contract at the `contract_address` address
     start_cheat_caller_address(contract_address, caller);
     dispatcher.register(new_user_name);
     stop_cheat_caller_address(contract_address);
@@ -60,7 +59,6 @@ fn test_publish() {
     let new_title: felt252 = 'First Title';
     let new_ctx: ByteArray = "First Post";
 
-    // Change the caller address calling the contract at the `contract_address` address
     start_cheat_caller_address(contract_address, caller);
     dispatcher.publish(new_title, new_ctx.clone());
     stop_cheat_caller_address(contract_address);
@@ -78,9 +76,27 @@ fn test_publish() {
     assert_eq!(context, new_ctx.clone(), "Should be the expected context");
 }
 
-// #[test]
-// fn test_like() {
+#[test]
+fn test_like() {
+    let contract_address = deploy_contract();
+    let dispatcher = IStarticleDispatcher { contract_address };
 
-// }
+    let caller = contract_address_const::<'caller'>();
+    let new_title: felt252 = 'First Title';
+    let new_ctx: ByteArray = "First Post";
+
+    start_cheat_caller_address(contract_address, caller);
+    dispatcher.publish(new_title, new_ctx.clone());
+    stop_cheat_caller_address(contract_address);
+    
+    let liker = contract_address_const::<'liker'>();
+    start_cheat_caller_address(contract_address, liker);
+    dispatcher.like(caller, 0);
+    stop_cheat_caller_address(contract_address);
+
+    let post_info = dispatcher.get_post(caller, 0);
+    assert_eq!(post_info.likes_num, 1, "Should be the expected likes_num");
+
+}
 
 
