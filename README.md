@@ -18,13 +18,10 @@ Join the Starticle community and share your articles NOW 💭. Embrace the futur
 
 ## Team & Background
 
-- **Team Name: うさみ (Usami)**
-- **Member Amount:** 1
-
 | Member | Introduction | Contact |
 | :--------: | -------- | --- |
 | [Alfred Lu](https://www.chihaolu.me/) | A Blockchain Developer at imToken Labs in Taiwan. My current focus is on researching Account Abstraction, Layer 2 solutions, and ZKP. I'm actively involved in several open-source projects, especially those related to StarkNet and AA.| Telegram: [@Alfred_Lu](https://t.me/)|
 
 ## Development
 
-Please see the doc [here](./doc/README.md)
+Please see the doc [here](https://github.com/ChiHaoLu/starticle/tree/main/doc)
