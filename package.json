@@ -1,9 +1,9 @@
 {
-  "name": "ss-2",
-  "version": "0.0.2",
+  "name": "starticle",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
-  "author": "Q3 Labs",
+  "author": "ChiHaoLu",
   "workspaces": {
     "packages": [
       "packages/snfoundry",
@@ -11,18 +11,18 @@
     ]
   },
   "scripts": {
-    "chain": "yarn workspace @ss-2/snfoundry chain",
-    "compile": "yarn workspace @ss-2/snfoundry compile",
-    "deploy": "yarn workspace @ss-2/snfoundry deploy",
-    "format": "yarn workspace @ss-2/nextjs format && yarn workspace @ss-2/snfoundry format",
-    "format:check": "yarn workspace @ss-2/nextjs format:check && yarn workspace @ss-2/snfoundry format:check",
-    "next:check-types": "yarn workspace @ss-2/nextjs check-types",
-    "next:lint": "yarn workspace @ss-2/nextjs lint",
+    "chain": "yarn workspace starticle-contract chain",
+    "compile": "yarn workspace starticle-contract compile",
+    "deploy": "yarn workspace starticle-contract deploy",
+    "format": "yarn workspace starticle-app format && yarn workspace starticle-contract format",
+    "format:check": "yarn workspace starticle-app format:check && yarn workspace starticle-contract format:check",
+    "next:check-types": "yarn workspace starticle-app check-types",
+    "next:lint": "yarn workspace starticle-app lint",
     "prepare": "husky",
-    "start": "yarn workspace @ss-2/nextjs dev",
-    "test": "yarn workspace @ss-2/snfoundry test",
-    "vercel": "yarn workspace @ss-2/nextjs vercel",
-    "vercel:yolo": "yarn workspace @ss-2/nextjs vercel:yolo"
+    "start": "yarn workspace starticle-app dev",
+    "test": "yarn workspace starticle-contract test",
+    "vercel": "yarn workspace starticle-app vercel",
+    "vercel:yolo": "yarn workspace starticle-app vercel:yolo"
   },
   "dependencies": {
     "postcss": "^8.4.38"

@@ -1,5 +1,5 @@
 {
-  "name": "@ss-2/snfoundry",
+  "name": "starticle-contract",
   "version": "0.0.1",
   "scripts": {
     "chain": "cd local-devnet && cargo run -- --seed 0 --account-class cairo1",

@@ -1,6 +1,6 @@
 {
-  "name": "@ss-2/nextjs",
-  "version": "0.1.0",
+  "name": "starticle-app",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "build": "next build",
