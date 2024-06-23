@@ -1,11 +1,11 @@
-use contracts::Startikle::{IStarticle};
+use contracts::Starticle::{IStarticleDispatcher, IStarticleDispatcherTrait};
 use openzeppelin::tests::utils::constants::OWNER;
 use openzeppelin::utils::serde::SerializedAppend;
 use snforge_std::{declare, ContractClassTrait};
 use starknet::ContractAddress;
 
 fn deploy_contract() -> ContractAddress {
-    let contract = declare("Startikle").unwrap();
+    let contract = declare("Starticle").unwrap();
     let (contract_address, _) = contract.deploy(@array![]).unwrap();
     /// @notice we don't need the constructor calldata here
     // let mut calldata = array![];
@@ -16,9 +16,10 @@ fn deploy_contract() -> ContractAddress {
 
 #[test]
 fn test_deployment_values() {
+
     let contract_address = deploy_contract();
 
-    let dispatcher = IStarticle { contract_address };
+    let dispatcher = IStarticleDispatcher { contract_address };
 
     // Test initialization
     let current_published = dispatcher.get_system_total_published_num();

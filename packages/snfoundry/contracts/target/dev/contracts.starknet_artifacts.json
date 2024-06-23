@@ -1,0 +1,1 @@
+{"version":1,"contracts":[{"id":"ej7fno5rvuj48","package_name":"contracts","contract_name":"Starticle","module_path":"contracts::Starticle::Starticle","artifacts":{"sierra":"contracts_Starticle.contract_class.json","casm":"contracts_Starticle.compiled_contract_class.json"}}]}
