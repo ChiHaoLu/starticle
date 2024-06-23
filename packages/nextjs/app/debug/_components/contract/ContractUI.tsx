@@ -110,6 +110,18 @@ export const ContractUI = ({
                 </div>
               </div>
               <div className="p-5 divide-y divide-base-300">
+                <p className="my-0 text-sm">
+                  You can use{" "}
+                  <a
+                    href="https://cairo-utils-web.vercel.app/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="link"
+                  >
+                    this util
+                  </a>{" "}
+                  to conver short string to felt.
+                </p>
                 <ContractWriteMethods
                   deployedContractData={deployedContractData}
                   onChange={triggerRefreshDisplayVariables}
