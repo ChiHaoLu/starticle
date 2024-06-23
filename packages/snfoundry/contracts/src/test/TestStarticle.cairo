@@ -1,7 +1,7 @@
 use contracts::Starticle::{IStarticleDispatcher, IStarticleDispatcherTrait};
 use openzeppelin::tests::utils::constants::OWNER;
 use openzeppelin::utils::serde::SerializedAppend;
-use snforge_std::{declare, ContractClassTrait, start_cheat_caller_address, stop_cheat_caller_address};
+use snforge_std::{declare, ContractClassTrait, start_cheat_caller_address, stop_cheat_caller_address, spy_events, SpyOn, EventSpy};
 use starknet::{
     ContractAddress, contract_address_const, SyscallResultTrait, syscalls::deploy_syscall
 };
@@ -51,10 +51,32 @@ fn test_register() {
     assert_eq!(user_info.total_published, 0, "Should be the expected total_published");
 }
 
-// #[test]
-// fn test_publish() {
+#[test]
+fn test_publish() {
+    let contract_address = deploy_contract();
+    let dispatcher = IStarticleDispatcher { contract_address };
 
-// }
+    let caller = contract_address_const::<'caller'>();
+    let new_title: felt252 = 'First Title';
+    let new_ctx: ByteArray = "First Post";
+
+    // Change the caller address calling the contract at the `contract_address` address
+    start_cheat_caller_address(contract_address, caller);
+    dispatcher.publish(new_title, new_ctx.clone());
+    stop_cheat_caller_address(contract_address);
+
+    let user_info = dispatcher.get_publication(caller);
+    assert_eq!(user_info.total_published, 1, "Should be the expected total_published");
+
+    let post_info = dispatcher.get_post(caller, 0);
+    assert_eq!(post_info.index, 0, "Should be the expected index");
+    assert_eq!(post_info.author_address, caller, "Should be the expected author_address");
+    assert_eq!(post_info.title, new_title, "Should be the expected title");
+    assert_eq!(post_info.likes_num, 0, "Should be the expected likes_num");
+
+    let context = dispatcher.get_context(caller, 0);
+    assert_eq!(context, new_ctx.clone(), "Should be the expected context");
+}
 
 // #[test]
 // fn test_like() {

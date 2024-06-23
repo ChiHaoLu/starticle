@@ -27,7 +27,7 @@ pub trait IStarticle<TContractState> {
 
     // post get function
     fn get_post(self: @TContractState, address: ContractAddress, index: u256) -> Post;
-    fn get_contest(self: @TContractState, address: ContractAddress, index: u256) -> ByteArray;
+    fn get_context(self: @TContractState, address: ContractAddress, index: u256) -> ByteArray;
     fn get_likes(self: @TContractState, author: ContractAddress, index: u256) -> u256;
 }
 
@@ -221,7 +221,7 @@ pub mod Starticle {
             return self.post.read((address, index));
         }
 
-        fn get_contest(self: @ContractState, address: ContractAddress, index: u256) -> ByteArray {
+        fn get_context(self: @ContractState, address: ContractAddress, index: u256) -> ByteArray {
             return self.context.read((address, index));
         }
         
