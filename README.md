@@ -6,7 +6,7 @@ Unlock a new dimension of decentralized publication with Starticle, the avant-ga
 
 - [Project Link](https://ethglobal.com/events/starkhack/project)
 - [Github Link](https://github.com/ChiHaoLu/starticle)
-- [Demo Link]()
+- [Demo Link](https://starticle-chihaolu-chihaolus-projects.vercel.app/)
 
 ## Key Features
 
